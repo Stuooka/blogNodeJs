@@ -1,0 +1,19 @@
+{
+  "name": "blogNodeJs",
+  "version": "1.0.0",
+  "description": "Ingesup - B3 : Dossier pour le TP noté NodeJs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Stuooka/blogNodeJs.git"
+  },
+  "author": "Exlito, Stuooka, Loïmar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stuooka/blogNodeJs/issues"
+  },
+  "homepage": "https://github.com/Stuooka/blogNodeJs"
+}
