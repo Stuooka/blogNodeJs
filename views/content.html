@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+
+{% block content %}
+	<h1>{{ pagename|title }}</h1>
+	<ul>
+		{% for author in authors %}
+			<li class="first">
+			{{ author }}
+			</li>
+		{% endfor %}
+	</ul>
+
+	<form id="inscription" name="inscription" method="post" action="">
+		<p> 
+			<label>Nom :</label>
+			<input type="text" name="nomPost" />
+			<label>Race :</label>
+			<input type="text" name="racePost" />
+			<input type="submit" value="Enregistrer" name="enregistrer" />
+		</p>
+	</form>
+
+	<h2>PONY</h2>
+	<p>Dernier ajout <strong>{{ ponyName }}</strong> - <strong>{{ ponyRace }}</strong></p>
+	<ul>
+		{% for pony in equestria %}
+			<li class="first">
+			{{ pony }}
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock %}
