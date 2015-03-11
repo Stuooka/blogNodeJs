@@ -1,28 +1,29 @@
 {% extends 'index.html' %}
 
 {% block content %}
-		{% for com in commentaires %}
-			<div class="article">
-				<p>
-					<h1>{{ article.title }}</h1>
-					<h5>{{ article.date }} par {{ article.author }}</h5>
-					{% if article.modified_date != "0000-00-00 00:00:00" %}
-						<h6>Modifi&eacute; le {{ article.modified_date }}</h6>
-					{% endif %}
-					{{ article.excerpt }}
-					<a class="suitelink" href="./?page=article&id_article='{{ article.id }}'"></a></p>
-			</div>
-			<div class="separateur"></div>'			
-		{% endfor %}
+	<form action="/" method="post">
+        Title:
+        <input type="text" name="title" />
+        <br>
+        Author:
+        <input type="text" name="author" />
+        <br>
+        Text:
+        <input type="text" name="text" />
+        <br>
+        <button type="submit">Submit</button>
+    </form>
 
+	{% for article in articles %}
+		<div class="article">
+			<p>
+				<h1>{{ article.title }}</h1>
+				<h5>{{ article.date }} par {{ article.author }}</h5>
+
+				{{ article.excerpt }}
+			</p>
+		</div>
+		<div class="separateur"></div>		
+	{% endfor %}
+	
 {% endblock %}
-
-<!--
-article:
-	title
-	author
-	date
-	modified_date
-	excerpt
-	text
--->

@@ -1,9 +1,10 @@
 {% extends 'index.html' %}
 
 {% block content %}
-	<h1>{{ pagename|title }}</h1>
-	<h3>{{ author }}</h3>
-	<p>{{ article }}</p>
+
+	<h1>{{ article.title }}</h1>
+	<h5>{{ article.date}} par {{ article.author }}</h5>
+	<p>{{ article.text }}</p>	
 
 	<form id="commentaire" name="commentaire" method="post" action="">
 		<p> 
@@ -17,12 +18,12 @@
 		</p>
 	</form>
 
-	<h2>Commentaire</h2>
-	<p>Dernier ajout <strong>{{ pseudo }}</strong> - <strong>{{ mail }}</strong></p>
+	<h3>Commentaire</h3>
 	<ul>
-		{% for com in commentaires %}
-			<li class="first">
-			{{ com }}
+		{% for comment in commentaires %}
+			<li><a href="mailto:{{ comment.author_mail }}">{{ comment.author }}</a> le {{ comment.date }}.</li>
+			<li>
+			{{ comment.text }}
 			</li>
 		{% endfor %}
 	</ul>

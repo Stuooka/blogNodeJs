@@ -22,7 +22,7 @@ app.set('views', '.' + '/views');
 
 // On se connecte à la base de données
 // N'oubliez pas de lancer ~/mongodb/bin/mongod dans un terminal !
-mongoose.connect('mongodb://localhost/blog', function(err) {
+mongoose.connect('mongodb://localhost/testLocal', function(err) {
     if (err) {
         throw err;
     }
@@ -55,28 +55,8 @@ app.get('/', function(req, res) {
         if (err) {
             throw err;
         }
-
-        res.render('contentAccueil', {
-        	articles: articles
-		});
-    });    
-});
-
-app.post('/', function(req, res) {
-
-    var monArticle = new articleModel();
-    monArticle.title = req.body.title;
-    monArticle.author = req.body.author;
-    monArticle.excerpt = req.body.text.substr(0, 6) + "...";
-    monArticle.text = req.body.text;
-
-    monArticle.save(function(err) {
-        if (err) {
-            throw err;
-        }
-        console.log('Article ajouté avec succès !');
-        res.redirect('/');
+        
+    	res.render('contentAccueil', { articles : articles});
     });
 
-    
 });

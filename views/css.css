@@ -1,0 +1,333 @@
+p{ 
+margin-top : 0px; 
+margin-bottom : 0px; 
+}
+
+a img{
+border: none;
+}
+
+h1{
+	font-family: "Cabin Condensed", "Lucida Sans", "Lucida Sans Unicode";
+}
+
+html{
+	background-color: #ECEDED;
+	min-width: 900px;
+	font-family: "Lucida Sans", "Lucida Sans Unicode";
+}
+
+#header{
+	margin: -8px;
+	background-image: url(../images/bg.png);
+	background-repeat: repeat-x;
+	padding-top: 5px;
+}
+
+#body{
+	margin: 0 auto; 
+	max-width: 1000px;
+	min-width: inherit;
+}
+
+#logo{
+	margin-top: 60px;
+	margin-right: 20px;
+	background-image: url(../images/logo.png);
+	float: right;
+	height: 43px;
+	width: 424px;
+}
+
+
+#links{
+	float: left;
+}
+
+.facebook
+{
+	background-image: url("../images/fb.png");
+	height: 72px;
+	width: 72px;
+}
+
+.facebook:hover
+{
+	background-image: url("../images/facebook.png");
+	height: 72px;
+	width: 200px;
+}
+
+.twitter
+{
+	margin-top: 10px;
+	background-image: url("../images/twit.png");
+	height: 72px;
+	width: 72px;
+}
+
+.twitter:hover
+{
+	margin-top: 10px;
+	background-image: url("../images/twitter.png");
+	height: 72px;
+	width: 200px;
+}
+
+
+
+.menu{
+	margin-top: 160px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 20px;
+
+	height: 51px;
+
+}
+
+#acceuil{
+
+}
+
+#acceuil:hover{
+
+}
+
+#galerie{
+
+}
+
+#galerie:hover{
+
+}
+
+#wallpaper{
+
+}
+
+#wallpaper:hover{
+
+}
+
+#contact{
+
+}
+
+#contact:hover{
+
+}
+
+.imgarticle{
+
+
+	margin-right: 5px;
+	margin-left: 5px;
+		
+	margin-bottom: 10px;
+	float: left;
+}
+
+.article{
+	color: #666666;
+	padding: 10px;
+	text-align: justify;
+	min-height: 260px;
+}
+
+.article:hover{
+	padding: 10px;
+	text-align: justify;
+	min-height: 260px;
+	background-color: #d4d4d4;
+}
+
+.article h1{
+	color: #777777;
+	margin: 0px;
+	text-align: right;
+}
+
+.article  h5{
+	color: #999999;
+	margin: 0px;
+	margin-bottom: 10px;
+	text-align: right;
+}
+
+.article  h6{
+	color: #999999;
+	margin: 0px;
+	margin-bottom: 10px;
+	text-align: right;
+}
+
+
+
+
+.articlefull{
+	padding: 10px;
+	text-align: justify;
+	min-height: 260px;
+	background-color: #d4d4d4;
+}
+
+.articlefull h1{
+	color: #777777;
+	margin: 0px;
+	text-align: right;
+}
+
+.articlefull  h5{
+	color: #999999;
+	margin: 0px;
+	margin-bottom: 10px;
+	text-align: right;
+}
+
+.articlefull  h6{
+	color: #999999;
+	margin: 0px;
+	margin-bottom: 10px;
+	text-align: right;
+}
+
+
+.suitelink{
+	clear: both;
+	float: right;
+	height: 35px;
+	width: 145px;
+	background-image: url(../images/suite.png);
+	margin-bottom: 10px;
+
+}
+
+.separateur {
+	background-image: url(../images/separateur.png);
+	height: 3px;
+	width: 500px;
+	margin: 30px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+table {
+	background-size: 100% 100%;
+}
+
+.imgarticle a{
+	width: 25%;
+	height: 200px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.menubar{
+
+}
+.menubar:hover{
+
+}
+
+ul#saturday {
+	margin:0;
+	padding:0;
+	list-style-type:none;
+	width:auto;
+	position:relative;
+	display:block;
+	height:36px;
+	text-transform:uppercase;
+	font-size:12px;font-weight:bold;
+	background:transparent url("../images/menu/bgOFF.gif") repeat-x top left;
+	font-family:Helvetica,Arial,Verdana,sans-serif;
+	border-bottom:4px solid #336666;
+	border-top:1px solid #C0E2D4;
+}
+
+ul#saturday li {
+	display:block;
+	float:left;
+	margin:0;
+	padding:0;
+}
+
+ul#saturday li a {
+	display:block;
+	float:left;
+	color:#874B46;
+	text-decoration:none;
+	padding:12px 20px 0 20px;
+	height:24px;
+	background:transparent url("../images/menu/bgDIVIDER.gif") no-repeat top right;
+}
+
+ul#saturday li a:hover {
+	background:transparent url("../images/menu/bgHOVER.gif") no-repeat top right;
+}
+
+ul#saturday li a.current, ul#saturday li a.current:hover {
+	color:#fff;
+	background:transparent url("../images/menu/bgON.gif") no-repeat top right;
+}
+
+
+.comment{
+	color: #666666;
+	padding: 10px;
+	text-align: justify;
+	min-height: 100px;
+	background-color: #E6E6E6;
+}
+
+.comment:hover{
+	padding: 10px;
+	text-align: justify;
+	min-height: 100px;
+	background-color: #d4d4d4;
+}
+
+.comment  h5{
+	color: #999999;
+	margin: 0px;
+	margin-bottom: 10px;
+	text-align: left;
+}
+
+.comment  h3{
+	color: #999999;
+	margin: 0px;
+	margin-bottom: 10px;
+	text-align: left;
+}
+
+.comment  h6{
+	color: #999999;
+	margin: 0px;
+	margin-bottom: 10px;
+	text-align: left;
+}
+.comment a:link {
+    color: #999999;
+}
+
+/* visited link */
+.comment a:visited {
+    color: #999999;
+}
+
+/* mouse over link */
+.comment a:hover {
+    color: #999999;
+}
+
+/* selected link */
+.comment a:active {
+    color: #999999;
+}
+
+.rightText {
+	margin-right: 0px;
+	text-align: right;
+}
