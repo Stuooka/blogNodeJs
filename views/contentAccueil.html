@@ -1,23 +1,11 @@
 {% extends 'index.html' %}
 
 {% block content %}
-	<form action="/" method="post">
-        Title:
-        <input type="text" name="title" />
-        <br>
-        Author:
-        <input type="text" name="author" />
-        <br>
-        Text:
-        <input type="text" name="text" />
-        <br>
-        <button type="submit">Submit</button>
-    </form>
-
 	{% for article in articles %}
 		<div class="article">
 			<p>
-				<h1>{{ article.title }}</h1>
+				<h1><a href="/article?id={{ article._id.toString() }}">
+					{{ article.title }}</a></h1>
 				<h5>{{ article.date }} par {{ article.author }}</h5>
 
 				{{ article.excerpt }}

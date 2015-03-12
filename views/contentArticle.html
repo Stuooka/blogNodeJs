@@ -5,23 +5,29 @@
 	<h1>{{ article.title }}</h1>
 	<h5>{{ article.date}} par {{ article.author }}</h5>
 	<p>{{ article.text }}</p>	
-
-	<form id="commentaire" name="commentaire" method="post" action="">
-		<p> 
-			<label>Pseudo :</label>
-			<input type="text" name="pseudoCommentaire" />
-			<label>Mail :</label>
-			<input type="text" name="mailCommentaire" />
-			<label>Message :</label>
-			<input type="text" name="messageCommentaire"/>
-			<input type="submit" value="Poster" name="postCommentaire" />
-		</p>
-	</form>
+	<p>{{ article }}</p>
+	<fieldset>
+		<legend>Commentaire</legend>
+		<form id="commentaire" name="commentaire" method="post" action="">
+			<p> 
+				<label>Pseudo :</label>
+				<input type="text" name="pseudoCommentaire" />
+				<label>Mail :</label>
+				<input type="text" name="mailCommentaire" />
+				<label>Message :</label>
+				<textarea name="messageCommentaire"/>
+				<input type="submit" value="Poster" name="postCommentaire" />
+			</p>
+		</form>
+	</fieldset>
 
 	<h3>Commentaire</h3>
 	<ul>
 		{% for comment in commentaires %}
-			<li><a href="mailto:{{ comment.author_mail }}">{{ comment.author }}</a> le {{ comment.date }}.</li>
+			<li>
+				<a href="mailto:"{{ comment.author_mail }}>
+				{{ comment.author }}</a> le {{ comment.date }}.
+			</li>
 			<li>
 			{{ comment.text }}
 			</li>

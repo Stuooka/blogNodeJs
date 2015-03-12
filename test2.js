@@ -55,8 +55,7 @@ app.get('/', function(req, res) {
         if (err) {
             throw err;
         }
-        
     	res.render('contentAccueil', { articles : articles});
     });
 
-});
+}); 

@@ -72,27 +72,30 @@ app.get('/:page', function(req, res) {
     query.exec(function(err, articles) {
         if (err) {
             throw err;
-        }
-		
+        }		
 			
 		switch(req.params.page) {
 			case 'accueil':
 				res.render('contentAccueil', { articles: articles });
 			break;
-			case 'article':
-				if(req.query.id){
-					var article = articles.filter(function(element){ return element._id.toString() == req.query.id; })
-					console.log(article);
-					res.render('contentArticle', { article: article });
-					break;
-				}
+            case 'admin':
+                res.render('contentAdmin');
+            case 'article':
+                if(req.query.id){
+                    var article = articles.filter(function(element){
+                        return element._id.toString() == req.query.id; 
+                    })
+                    console.log(article);
+                    res.render('contentArticle', { article: article[0] });
+                    break;
+                }
 			default:
 				res.render('contentAccueil', { articles: articles });
 		}
     });    
 });
 
-app.post('/', function(req, res) {
+app.post('/contentAdmin', function(req, res) {
 
     var monArticle = new articleModel();
     monArticle.title = req.body.title;

@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<fieldset>
+	<legend>Ecrire un article</legend>
+	<form action="/contentAdmin.html" method="post">
+	        Title:
+	        <input type="text" name="title" />
+	        <br>
+	        Author: <!-- default : $_SESSION['pseudo'] ?? -->
+	        <input type="text" name="author" />
+	        <br>
+	        Contenu:
+	        <textarea name="content" />
+	        <br>
+	        <button type="publish">Publier</button>
+	    </form>
+</fieldset>
+{% endblock %}
