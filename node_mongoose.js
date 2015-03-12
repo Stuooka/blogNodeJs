@@ -2,6 +2,7 @@
 var fs = require('fs');
 var swig = require('swig');
 var mongoose = require('mongoose');
+var mongo = require('mongodb');
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -59,6 +60,35 @@ app.get('/', function(req, res) {
         res.render('contentAccueil', {
         	articles: articles
 		});
+    });    
+});
+
+app.get('/:page', function(req, res) {
+
+    var articles;
+
+    var query = articleModel.find();
+
+    query.exec(function(err, articles) {
+        if (err) {
+            throw err;
+        }
+		
+			
+		switch(req.params.page) {
+			case 'accueil':
+				res.render('contentAccueil', { articles: articles });
+			break;
+			case 'article':
+				if(req.query.id){
+					var article = articles.filter(function(element){ return element._id.toString() == req.query.id; })
+					console.log(article);
+					res.render('contentArticle', { article: article });
+					break;
+				}
+			default:
+				res.render('contentAccueil', { articles: articles });
+		}
     });    
 });
 
