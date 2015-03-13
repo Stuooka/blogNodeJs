@@ -143,7 +143,9 @@ app.get('/:page', function(req, res) {
 
 //Gestion des actions POST
 app.post('/:page', function(req, res) {
-    if(req.body.register){
+/*   
+    if(req.body.register)
+    {
         var monCompte = new compteModel();
         monCompte.pseudo = req.body.pseudo;
         monCompte.mail = req.body.mail;
@@ -151,13 +153,15 @@ app.post('/:page', function(req, res) {
         monCompte.typeUser = req.body.typeUser;
 
         monCompte.save(function(err){
-                    if(err)
-                        throw err;
+                    if(err) { throw err; }
                 console.log('Compte créé avec succès !');
                 //rechargement de la page
                 res.redirect('/accueil');
+        }
     }
-    else if(req.body.connection){
+
+    if(req.body.connection)
+    {
         //Récupération de tout les comptes
         var comptes;
         var query = articleModel.find();
@@ -167,7 +171,10 @@ app.post('/:page', function(req, res) {
 
             //FOR EACH POUR CHERCHER PARMIS LES USERS
         }); 
-    }else{
+    }
+    else
+    {  
+*/
         switch(req.params.page){
 
             case 'article' :
@@ -179,8 +186,7 @@ app.post('/:page', function(req, res) {
                 monCommentaire.idArticle = req.body.idArticle;
 
                 monCommentaire.save(function(err){
-                    if(err)
-                        throw err;
+                    if(err) { throw err; }
                 console.log('Commentaire ajouté avec succès !');
                 //rechargement de la page
                 res.redirect('/article?id='+req.body.idArticle);
@@ -208,5 +214,5 @@ app.post('/:page', function(req, res) {
             default:
             break;
         }
-    }  
+    //}  
 });
