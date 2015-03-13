@@ -41,7 +41,6 @@ var articleSchema = new mongoose.Schema({
     excerpt: String,
     text: String
 });
-
 // Création du Model pour les articles
 var articleModel = mongoose.model('articles', articleSchema);
 
@@ -57,21 +56,29 @@ var commentairesSchema = new mongoose.Schema({
     text: String,
     idArticle: String
 });
-
 // Création du Model pour les commentaires
 var commentairesModel = mongoose.model('commentaires', commentairesSchema);
 
+//Création du schéma pour les comptes utilisateurs
+var compteSchema = new mongoose.Schema({
+    id:Number,
+    pseudo:String,
+    mail:String,
+    password:String,
+    typeUser:Boolean
+})
+//Création du Model pour les comptes utilisateurs
+var compteModel = mongoose.model('comptes', compteSchema);
 
+
+//Gestion de la page d'accueil
 app.get('/', function(req, res) {
-
+    //Récupération de tout les articles
     var articles;
-
     var query = articleModel.find();
 
     query.exec(function(err, articles) {
-        if (err) {
-            throw err;
-        }
+        if (err) { throw err; }
 
         res.render('contentAccueil', {
         	articles: articles
@@ -79,38 +86,46 @@ app.get('/', function(req, res) {
     });    
 });
 
+//Gestion de la navigation
 app.get('/:page', function(req, res) {
-
-    console.log("GET : "+req.params.page);
-
+    //Récupération de tout les articles
     var articles;
-
     var query = articleModel.find();
 
     query.exec(function(err, articles) {
-        if (err) {
-            throw err;
-        }		
+        if (err) { throw err; }		
 			
 		switch(req.params.page) {
+
 			case 'accueil':
 				res.render('contentAccueil', { articles: articles });
 			break;
+
             case 'admin':
                 res.render('contentAdmin');
             break;
+
+            case 'compte':
+                res.render('contentAccount');
+            break;
+
             case 'article':
+                //Récupération d'un article selon l'id selectionnée (lien) 
                 if(req.query.id){
                     var article = articles.filter(function(element){
                         return element._id.toString() == req.query.id; 
                     })
 
+                    //Récupération de tout les commentaires liés à cet article
                     var commentaires;
-                    var commentQuery = commentairesModel.find(null);
+                    var commentQuery = commentairesModel.find();
                     commentQuery.where('idArticle', article[0]._id.toString());
                     commentQuery.exec(function(err, comms){
                         if(err) { throw err; }
                         commentaires=comms;
+
+                        //Envois de l'article et de ses commentaires à la page
+                        //spécifique aux articles
                         res.render('contentArticle', { 
                             article: article[0],
                             commentaires: comms 
@@ -118,6 +133,7 @@ app.get('/:page', function(req, res) {
                     });
                     break;                       
                 }
+
 			default:
 				res.render('contentAccueil', { articles: articles });
                 break;
@@ -125,44 +141,72 @@ app.get('/:page', function(req, res) {
     });    
 });
 
+//Gestion des actions POST
 app.post('/:page', function(req, res) {
+    if(req.body.register){
+        var monCompte = new compteModel();
+        monCompte.pseudo = req.body.pseudo;
+        monCompte.mail = req.body.mail;
+        monCompte.password = req.body.password;
+        monCompte.typeUser = req.body.typeUser;
 
-    console.log("POST : "+req.params.page);
-
-    switch(req.params.page){
-        case 'article' :
-            var monCommentaire = new commentairesModel();
-            monCommentaire.authorPseudo = req.body.authorPseudo;
-            monCommentaire.authorMail = req.body.authorMail;
-            monCommentaire.text = req.body.messageCommentaire;
-            monCommentaire.idArticle = req.body.idArticle;
-
-            monCommentaire.save(function(err){
-                if(err)
-                    throw err;
-            console.log('Commentaire ajouté avec succès !');
-            res.redirect('/article?id='+req.body.idArticle);
-        });
-        break;
-        case 'admin':
-            var monArticle = new articleModel();
-            monArticle.title = req.body.title;
-            monArticle.author = req.body.author;
-            monArticle.excerpt = req.body.content.substr(0, 6) + "...";
-            monArticle.text = req.body.content;
-
-            monArticle.save(function(err) {
-                if (err) {
-                    throw err;
-                }
-                console.log('Article ajouté avec succès !');
-                res.redirect('/admin');
-            });
-        break;
-        default:
-        break;
+        monCompte.save(function(err){
+                    if(err)
+                        throw err;
+                console.log('Compte créé avec succès !');
+                //rechargement de la page
+                res.redirect('/accueil');
     }
-    
+    else if(req.body.connection){
+        //Récupération de tout les comptes
+        var comptes;
+        var query = articleModel.find();
 
-    
+        query.exec(function(err, comptes) {
+            if (err) { throw err; }
+
+            //FOR EACH POUR CHERCHER PARMIS LES USERS
+        }); 
+    }else{
+        switch(req.params.page){
+
+            case 'article' :
+                //Création d'un nouveau commentaire
+                var monCommentaire = new commentairesModel();
+                monCommentaire.authorPseudo = req.body.authorPseudo;
+                monCommentaire.authorMail = req.body.authorMail;
+                monCommentaire.text = req.body.messageCommentaire;
+                monCommentaire.idArticle = req.body.idArticle;
+
+                monCommentaire.save(function(err){
+                    if(err)
+                        throw err;
+                console.log('Commentaire ajouté avec succès !');
+                //rechargement de la page
+                res.redirect('/article?id='+req.body.idArticle);
+            });
+            break;
+
+            case 'admin':
+                //Création d'un nouvel article
+                var monArticle = new articleModel();
+                monArticle.title = req.body.title;
+                monArticle.author = req.body.author;
+                monArticle.excerpt = req.body.content.substr(0, 6) + "...";
+                monArticle.text = req.body.content;
+
+                monArticle.save(function(err) {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log('Article ajouté avec succès !');
+                    //rechargement de la page
+                    res.redirect('/admin');
+                });
+            break;
+
+            default:
+            break;
+        }
+    }  
 });
