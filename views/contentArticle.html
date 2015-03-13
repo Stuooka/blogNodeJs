@@ -1,36 +1,55 @@
 {% extends 'index.html' %}
 
 {% block content %}
-
-	<h1>{{ article.title }}</h1>
-	<h5>{{ article.date}} par {{ article.author }}</h5>
-	<p>{{ article.text }}</p>	
-	<p>{{ article }}</p>
+<p><a href="/">Go back</a></p>
 	<fieldset>
-		<legend>Commentaire</legend>
-		<form id="commentaire" name="commentaire" method="post" action="">
-			<p> 
-				<label>Pseudo :</label>
-				<input type="text" name="pseudoCommentaire" />
-				<label>Mail :</label>
-				<input type="text" name="mailCommentaire" />
-				<label>Message :</label>
-				<textarea name="messageCommentaire"/>
-				<input type="submit" value="Poster" name="postCommentaire" />
-			</p>
-		</form>
+		<legend>ARTICLE</legend>
+		<h1>{{ article.title }}</h1>
+		<h5>{{ article.date.toString() }} par {{ article.author }}</h5>
+		<p>{{ article.text }}</p>
 	</fieldset>
 
-	<h3>Commentaire</h3>
-	<ul>
-		{% for comment in commentaires %}
-			<li>
-				<a href="mailto:"{{ comment.author_mail }}>
-				{{ comment.author }}</a> le {{ comment.date }}.
-			</li>
-			<li>
-			{{ comment.text }}
-			</li>
-		{% endfor %}
-	</ul>
+	<fieldset>
+		<legend>COMMENTEZ</legend>
+		<table border="0">
+			<form method="post" action="article">
+				<tr>
+					<td><label>Pseudo :</label></td>
+					<td><input type="text" name="authorPseudo" /></td>
+				</tr>
+				<tr>
+					<td><label>Mail :</label></td>
+					<td><input type="text" name="authorMail" /></td>
+				</tr>
+				<tr>
+					<td><label>Message :</label></td>
+					<td><textarea name="messageCommentaire" cols="80" rows="20">
+						</textarea></td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="Poster" name="postCommentaire" /></td>
+				</tr>
+
+				<input type="hidden" name="idArticle"
+					value="{{ article._id.toString() }}" />
+			</form>
+		</table>
+	</fieldset>
+
+	<fieldset>
+		<legend>COMMENTAIRES</legend>
+		<ul>
+			{% for comment in commentaires %}
+			<p>
+				<li>
+					<a href="mailto:{{ comment.authorMail }}">
+					{{ comment.authorPseudo }}</a> le {{ comment.date.toString() }}.
+				</li>
+				<li>
+				{{ comment.text }}
+				</li>
+			</p>
+			{% endfor %}
+		</ul>
+	</fieldset>
 {% endblock %}

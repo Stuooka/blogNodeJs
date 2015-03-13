@@ -29,7 +29,7 @@ mongoose.connect('mongodb://localhost/blog', function(err) {
     }
 });
 
-// Création du schéma pour les commentaires
+// Création du schéma pour les articles
 var articleSchema = new mongoose.Schema({
     id: Number,
     title: String,
@@ -42,8 +42,24 @@ var articleSchema = new mongoose.Schema({
     text: String
 });
 
-// Création du Model pour les commentaires
+// Création du Model pour les articles
 var articleModel = mongoose.model('articles', articleSchema);
+
+// Création du schéma pour les commentaires
+var commentairesSchema = new mongoose.Schema({
+    id: Number,
+    authorPseudo: String,
+    authorMail: String,
+    date: {
+        type: Date,
+        default: Date.now
+    },
+    text: String,
+    idArticle: String
+});
+
+// Création du Model pour les commentaires
+var commentairesModel = mongoose.model('commentaires', commentairesSchema);
 
 
 app.get('/', function(req, res) {
@@ -65,6 +81,8 @@ app.get('/', function(req, res) {
 
 app.get('/:page', function(req, res) {
 
+    console.log("GET : "+req.params.page);
+
     var articles;
 
     var query = articleModel.find();
@@ -80,36 +98,71 @@ app.get('/:page', function(req, res) {
 			break;
             case 'admin':
                 res.render('contentAdmin');
+            break;
             case 'article':
                 if(req.query.id){
                     var article = articles.filter(function(element){
                         return element._id.toString() == req.query.id; 
                     })
-                    console.log(article);
-                    res.render('contentArticle', { article: article[0] });
-                    break;
+
+                    var commentaires;
+                    var commentQuery = commentairesModel.find(null);
+                    commentQuery.where('idArticle', article[0]._id.toString());
+                    commentQuery.exec(function(err, comms){
+                        if(err) { throw err; }
+                        commentaires=comms;
+                        res.render('contentArticle', { 
+                            article: article[0],
+                            commentaires: comms 
+                        });
+                    });
+                    break;                       
                 }
 			default:
 				res.render('contentAccueil', { articles: articles });
+                break;
 		}
     });    
 });
 
-app.post('/contentAdmin', function(req, res) {
+app.post('/:page', function(req, res) {
 
-    var monArticle = new articleModel();
-    monArticle.title = req.body.title;
-    monArticle.author = req.body.author;
-    monArticle.excerpt = req.body.text.substr(0, 6) + "...";
-    monArticle.text = req.body.text;
+    console.log("POST : "+req.params.page);
 
-    monArticle.save(function(err) {
-        if (err) {
-            throw err;
-        }
-        console.log('Article ajouté avec succès !');
-        res.redirect('/');
-    });
+    switch(req.params.page){
+        case 'article' :
+            var monCommentaire = new commentairesModel();
+            monCommentaire.authorPseudo = req.body.authorPseudo;
+            monCommentaire.authorMail = req.body.authorMail;
+            monCommentaire.text = req.body.messageCommentaire;
+            monCommentaire.idArticle = req.body.idArticle;
+
+            monCommentaire.save(function(err){
+                if(err)
+                    throw err;
+            console.log('Commentaire ajouté avec succès !');
+            res.redirect('/article?id='+req.body.idArticle);
+        });
+        break;
+        case 'admin':
+            var monArticle = new articleModel();
+            monArticle.title = req.body.title;
+            monArticle.author = req.body.author;
+            monArticle.excerpt = req.body.content.substr(0, 6) + "...";
+            monArticle.text = req.body.content;
+
+            monArticle.save(function(err) {
+                if (err) {
+                    throw err;
+                }
+                console.log('Article ajouté avec succès !');
+                res.redirect('/admin');
+            });
+        break;
+        default:
+        break;
+    }
+    
 
     
 });

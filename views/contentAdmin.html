@@ -1,19 +1,28 @@
 {% extends 'index.html' %}
 
 {% block content %}
+<p><a href="/">Go back</a></p>
+<h1>Panel d'Administration</h1>
 <fieldset>
 	<legend>Ecrire un article</legend>
-	<form action="/contentAdmin.html" method="post">
-	        Title:
-	        <input type="text" name="title" />
-	        <br>
-	        Author: <!-- default : $_SESSION['pseudo'] ?? -->
-	        <input type="text" name="author" />
-	        <br>
-	        Contenu:
-	        <textarea name="content" />
-	        <br>
-	        <button type="publish">Publier</button>
-	    </form>
+	<table border="0">
+		<form action="/admin" method="post">
+			<tr>
+	    	    <td>Title:</td>
+	    	    <td><input type="text" name="title" /></td>
+	    	</tr>
+	    	<tr>
+	    	    <td>Author: <!-- default : $_SESSION['pseudo'] ?? --></td>
+	    	    <td><input type="text" name="author" /></td>
+	    	</tr>
+	    	<tr>
+	    	    <td>Contenu:</td>
+	    	    <td><textarea name="content" cols="80" rows="20"></textarea></td>
+	    	</tr>
+	    	<tr>
+	    	   	<td><button type="publish">Publier</button></td>
+        	</tr>
+    	</form>
+	</table>
 </fieldset>
 {% endblock %}

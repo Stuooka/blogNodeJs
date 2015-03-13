@@ -1,14 +1,16 @@
 {% extends 'index.html' %}
 
 {% block content %}
+<p><a href="/admin">Panel d'Administration</a></p>
+	<h1>Bienvenue sur le blog du TP de NodeJs</h1>
 	{% for article in articles %}
 		<div class="article">
 			<p>
-				<h1><a href="/article?id={{ article._id.toString() }}">
-					{{ article.title }}</a></h1>
-				<h5>{{ article.date }} par {{ article.author }}</h5>
+				<h1>{{ article.title }}</h1>
+				<h5>{{ article.date.toString() }} par {{ article.author }}</h5>
 
-				{{ article.excerpt }}
+				{{ article.excerpt }} <br />
+				<a href="/article?id={{ article._id.toString() }}">Lire la suite</a>
 			</p>
 		</div>
 		<div class="separateur"></div>		
