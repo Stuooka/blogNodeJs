@@ -2,59 +2,65 @@
 
 {% block content %}
 <p><a href="/">Go back</a></p>
-{% if account==register %}
-	<fieldset>
-		<legend>S'enregistrer</legend>
-		<table border="0">
-			<form name="register" action="/" method="post">
-				<tr>
-		    	    <td>Pseudo:</td>
-		    	    <td><input type="text" name="pseudo" /></td>
-		    	</tr>
-		    	<tr>
-		    	    <td>Mail:</td>
-		    	    <td><input type="text" name="mail" /></td>
-		    	</tr>
-		    	<tr>
-		    	    <td>Mot de Passe:</td>
-		    	    <td><input type="password" name="password" /></td>
-		    	</tr>
-		    	<tr>
-		    	    <td>Type : </td>
-		    	    <td>
-		    	    	<select name="typeUser">
-							<option value="0">Admin</option>
-							<option value="1">User</option>
-						</select>
-					</td>
-		    	</tr>
-		    	<tr>
-		    	   	<td><button type="register">S'enregistrer</button></td>
-	        	</tr>
-	    	</form>
-		</table>
-	</fieldset>
-{% endif %}
+<table border="0">
+	<tr>
+		<td>
+			<fieldset>
+				<legend>S'enregistrer</legend>
+				<table border="0">
+					<form action="/compte" method="post">
+						<input type="hidden" name="form" value="register"/>
+						<tr>
+				    	    <td>Pseudo:</td>
+				    	    <td><input type="text" name="pseudo" /></td>
+				    	</tr>
+				    	<tr>
+				    	    <td>Mail:</td>
+				    	    <td><input type="text" name="mail" /></td>
+				    	</tr>
+				    	<tr>
+				    	    <td>Mot de Passe:</td>
+				    	    <td><input type="password" name="password" /></td>
+				    	</tr>
+				    	<tr>
+				    	    <td>Type : </td>
+				    	    <td>
+				    	    	<select name="typeUser">
+									<option value="1">Admin</option>
+									<option value="2">User</option>
+								</select>
+							</td>
+				    	</tr>
+				    	<tr>
+				    	   	<td><button type="register">S'enregistrer</button></td>
+			        	</tr>
+			    	</form>
+				</table>
+			</fieldset>
+		</td>
 
-{% if account==connection %}
-	<fieldset>
-		<legend>Se connecter</legend>
-		<table border="0">
-			<form name="connection" action="/" method="post">
-				<tr>
-		    	    <td>Pseudo:</td>
-		    	    <td><input type="text" name="pseudo" /></td>
-		    	</tr>
-		    	<tr>
-		    	    <td>Mot de Passe:</td>
-		    	    <td><input type="password" name="password" /></td>
-		    	</tr>
-		    	<tr>
-		    	   	<td><button type="register">Se connecter</button></td>
-	        	</tr>
-	    	</form>
-		</table>
-	</fieldset>
-{% endif %}
+		<td>
+			<fieldset>
+				<legend>Se connecter</legend>
+				<table border="0">
+					<form action="/compte" method="post">
+						<input type="hidden" name="form" value="connection"/>
+						<tr>
+				    	    <td>Pseudo:</td>
+				    	    <td><input type="text" name="pseudo" /></td>
+				    	</tr>
+				    	<tr>
+				    	    <td>Mot de Passe:</td>
+				    	    <td><input type="password" name="password" /></td>
+				    	</tr>
+				    	<tr>
+				    	   	<td><button type="connection">Se connecter</button></td>
+			        	</tr>
+			    	</form>
+				</table>
+			</fieldset>
+		</td>
+	</tr>
+</table>
 
 {% endblock %}

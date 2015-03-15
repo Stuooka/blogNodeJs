@@ -1,7 +1,12 @@
 {% extends 'index.html' %}
 
 {% block content %}
-<p><a href="/admin">Panel d'Administration</a></p>
+<table border="0">
+	<tr>
+		<td><p><a href="/admin">Panel d'Administration</a></p></td>
+		<td><p><a href="/compte">Connexion / Inscription</a></p></td>
+	</tr>
+</table>
 	<h1>Bienvenue sur le blog du TP de NodeJs</h1>
 	{% for article in articles %}
 		<div class="article">
