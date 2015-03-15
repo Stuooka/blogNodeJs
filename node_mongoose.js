@@ -4,14 +4,14 @@ var swig = require('swig');
 var mongoose = require('mongoose');
 var mongo = require('mongodb');
 var express = require('express');
-var expressSession = require('express-session');
+var session = require('express-session');
 var app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser());
-//  app.use(session({secret: 'ssshhhh'}));
+app.use(session({ cookie: {maxAge: 36000000, httpOnly: false}, secret: 'secret' })); 
 
 //Déclaration variable de session
-var session;
+var sess;
 
 //Création du serveur web
 var server = app.listen(3000, function() {
@@ -77,17 +77,17 @@ var compteModel = mongoose.model('comptes', compteSchema);
 
 //Gestion de la page d'accueil
 app.get('/', function(req, res) {
-    session=req.expressSession;
+    sess=req.session;
     
     //Récupération de tout les articles
     var articles;
     var query = articleModel.find();
-
+console.log(sess.typeUser);
     query.exec(function(err, articles) {
         if (err) { throw err; }
 
         res.render('contentAccueil', {
-        	articles: articles
+        	articles: articles, typeUser: sess.typeUser
 		});
     });    
 });
@@ -97,8 +97,8 @@ app.get('/:page', function(req, res) {
     //Récupération de tout les articles
     var articles;
     var query = articleModel.find();
-    session = req.expressSession;
-
+    sess = req.session;
+console.log(sess.typeUser);
     query.exec(function(err, articles) {
         if (err) { throw err; }		
 			
@@ -168,12 +168,24 @@ app.post('/:page', function(req, res) {
             if (req.body.form == 'connection') {
                 //Récupération de tout les comptes
                 var comptes;
-                var query = articleModel.find();
+                var query = compteModel.find("this.pseudo == req.body.pseudoConnect");
 
                 query.exec(function(err, comptes) {
-                if (err) { throw err; }
-                    //FOR EACH POUR CHERCHER PARMIS LES USERS
-                    res.redirect('/accueil');
+					if (err) { throw err; }
+					if (comptes[0].password == req.body.passwordConnect){
+						sess.username = comptes[0].pseudo;
+						sess.typeUser = comptes[0].typeUser;
+						req.session = sess;
+						req.session.save(function(err) {
+							console.log(sess.typeUser);
+							res.redirect('/accueil');
+						  // session saved 
+						});
+					}
+					else{
+						console.log("Bad password");
+						res.redirect('/compte');
+					}
                 });
             }
         break;
