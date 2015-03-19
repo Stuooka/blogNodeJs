@@ -24,7 +24,7 @@
 		<p>{{ article.text }}</p>
 	</fieldset>
 
-	{% if user.typeUser == 1 || user.typeUser == 2 %}
+	{% if user.typeUser != 0 %}
 	<fieldset>
 		<legend>COMMENTEZ</legend>
 		<table border="0">
@@ -53,7 +53,20 @@
 		<ul>
 			{% for comment in commentaires %}
 
-			{% if user.typeUser == 1 || (user.typeUser == 2 && user._id.toString() == comment.idAuthor) %}
+			<!-- Swig ne semble pas prendre en compte le OR et le AND donc scission en plusieurs IF. -->
+			{% if user.typeUser == 2 %}
+			{% if user._id.toString() == comment.idAuthor %}
+			<form method="post" action="edit">
+				<input type="submit" value="EditComment" name="edit"/>
+				<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
+			</form>
+			<form method="post" action="delete">
+				<input type="submit" value="DeleteComment" name="delete"/>
+				<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentDelete" />
+			</form>
+			{% endif %}
+			{% endif %}
+			{% if user.typeUser == 1 %} 
 			<form method="post" action="edit">
 				<input type="submit" value="EditComment" name="edit"/>
 				<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
