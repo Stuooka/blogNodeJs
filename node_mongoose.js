@@ -175,58 +175,82 @@ app.post('/:page', function(req, res) {
     switch(req.params.page){
         case 'compte' :
             if (req.body.form == 'register'){
-                //Création d'un nouveau compte
-                var monCompte = new compteModel();
-                monCompte.pseudo = req.body.pseudo;
-                monCompte.mail = req.body.mail;
-                monCompte.password = req.body.password;
-                monCompte.typeUser = req.body.typeUser;
-                monCompte.save(function(err){
-                    if(err) { throw err; }
-                    console.log('Compte créé avec succès !');
-                    //rechargement de la page
-                    res.redirect('/accueil');
-                });
+                //Si les infos sont rentrées
+                if(req.body.pseudo != "" || 
+                    req.body.mail != "" ||
+                    req.body.password != ""){
+                    //Création d'un nouveau compte
+                    var monCompte = new compteModel();
+                    monCompte.pseudo = req.body.pseudo;
+                    monCompte.mail = req.body.mail;
+                    monCompte.password = req.body.password;
+                    monCompte.typeUser = req.body.typeUser;
+                    monCompte.save(function(err){
+                        if(err) { throw err; }
+                        console.log('Compte créé avec succès !');
+                        //rechargement de la page
+                        res.redirect('/accueil');
+                    });  
+                }else{
+                    var errMessage = "Veuillez rentrer toutes les informations";
+                    res.render('contentAccount', { 
+                        errMessage: errMessage
+                    });
+                }                
             }
-            if (req.body.form == 'connection') {
-                //Récupération de tout les comptes
-                var comptes;
-                var query = compteModel.find();
-                query.where('pseudo', req.body.pseudoConnect);
 
-                query.exec(function(err, comptes) {
-					if (err) { throw err; }
-					if (comptes[0].password == req.body.passwordConnect){
-                        sess.user = comptes[0];
-						//sess.username = comptes[0].pseudo;
-						//sess.typeUser = comptes[0].typeUser;
-						req.session = sess;
-						req.session.save(function(err) {
-							res.redirect('/accueil');
-						  // session saved 
-						});
-					}
-					else{
-						console.log("Bad password");
-						res.redirect('/compte');
-					}
-                });
+            if (req.body.form == 'connection') {
+                if(req.body.pseudoConnect != "" ||
+                    req.body.passwordConnect != ""){
+                    //Récupération de tout les comptes
+                    var comptes;
+                    var query = compteModel.find();
+                    query.where('pseudo', req.body.pseudoConnect);
+
+                    query.exec(function(err, comptes) {
+                        if (err) { throw err; }
+                        if (comptes[0].password == req.body.passwordConnect){
+                            sess.user = comptes[0];
+                            //sess.username = comptes[0].pseudo;
+                            //sess.typeUser = comptes[0].typeUser;
+                            req.session = sess;
+                            req.session.save(function(err) {
+                                res.redirect('/accueil');
+                              // session saved 
+                            });
+                        }
+                        else{
+                            console.log("Bad password");
+                            var errMessage = "Mauvais Login ou mauvais Mot de Passe";
+                            res.render('contentAccount', { 
+                                errMessage: errMessage
+                            });
+                        }
+                    });
+                }else{
+                    var errMessage = "Veuillez rentrer toutes les informations";
+                    res.render('contentAccount', { 
+                        errMessage: errMessage
+                    });
+                }                
             }
         break;
        
         case 'article' :
-            //Création d'un nouveau commentaire
-            var monCommentaire = new commentairesModel();
-            monCommentaire.text = req.body.messageCommentaire;
-            monCommentaire.idAuthor = req.body.authorId;
-            monCommentaire.idArticle = req.body.idArticle;
+            if(req.body.messageCommentaire != ""){
+                //Création d'un nouveau commentaire
+                var monCommentaire = new commentairesModel();
+                monCommentaire.text = req.body.messageCommentaire;
+                monCommentaire.idAuthor = req.body.authorId;
+                monCommentaire.idArticle = req.body.idArticle;
 
-            monCommentaire.save(function(err){
-                if(err) { throw err; }
-                console.log('Commentaire ajouté avec succès !');
-                //rechargement de la page
-                res.redirect('/article?id='+req.body.idArticle);
-            });
+                monCommentaire.save(function(err){
+                    if(err) { throw err; }
+                    console.log('Commentaire ajouté avec succès !');
+                    //rechargement de la page
+                    res.redirect('/article?id='+req.body.idArticle);
+                });
+            }  
         break;
 
         case 'admin':
@@ -257,10 +281,10 @@ app.post('/:page', function(req, res) {
             if(req.body.delete == "DeleteArticle"){
                 var query = articleModel.find();
                 query.where('_id', req.body.idArticleDelete);
+                res.redirect('/accueil');
                 query.remove(function(err, comptes) {
                     if(err) { throw err; }
                     console.log('Article correctement supprimé !');
-                    redirect('/accueil');
                 });
             }
             if(req.body.delete == "DeleteComment"){

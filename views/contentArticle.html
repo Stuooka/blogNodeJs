@@ -6,14 +6,14 @@
 		<legend>ARTICLE</legend>
 
 		{% if user.typeUser == 1 %}
-		<form method="post" action="edit">
-			<input type="submit" value="EditArticle" name="edit"/>
-			<input type="hidden" value="{{ article._id.toString() }}" name="idArticleEdit" />
-		</form>
-		<form method="post" action="delete">
-			<input type="submit" value="DeleteArticle" name="delete"/>
-			<input type="hidden" value="{{ article._id.toString() }}" name="idArticleDelete" />
-		</form>
+			<form method="post" action="edit">
+				<input type="submit" value="EditArticle" name="edit"/>
+				<input type="hidden" value="{{ article._id.toString() }}" name="idArticleEdit" />
+			</form>
+			<form method="post" action="delete">
+				<input type="submit" value="DeleteArticle" name="delete"/>
+				<input type="hidden" value="{{ article._id.toString() }}" name="idArticleDelete" />
+			</form>
 		{% endif %}
 
 		<h1>{{ article.title }}</h1>
@@ -24,29 +24,29 @@
 		<p>{{ article.text }}</p>
 	</fieldset>
 
-	{% if user.typeUser != 0 %}
 	<fieldset>
 		<legend>COMMENTEZ</legend>
-		<table border="0">
-			<form method="post" action="article">					
-				<input type="hidden" name="authorId" 
-					value="{{ user._id.toString() }}" />
-				<input type="hidden" name="idArticle"
-					value="{{ article._id.toString() }}" />
-				<tr>
-					<td><label>Message :</label></td>
-					<td><textarea name="messageCommentaire" cols="80" rows="20">
-						</textarea></td>
-				</tr>
-				<tr>
-					<td><input type="submit" value="Poster" name="postCommentaire" /></td>
-				</tr>
-			</form>
-		</table>
-	</fieldset>
-	{% else %}
-	<p>Connectez-vous pour poster un commentaire.</p>
-	{% endif %}
+		{% if user.typeUser != 0 %}
+			<table border="0">
+				<form method="post" action="article">					
+					<input type="hidden" name="authorId" 
+						value="{{ user._id.toString() }}" />
+					<input type="hidden" name="idArticle"
+						value="{{ article._id.toString() }}" />
+					<tr>
+						<td><label>Message :</label></td>
+						<td><textarea name="messageCommentaire" cols="80" rows="20" placeholder="Votre commentaire ici...">
+							</textarea></td>
+					</tr>
+					<tr>
+						<td><input type="submit" value="Poster" name="postCommentaire" /></td>
+					</tr>
+				</form>
+			</table>
+		{% else %}
+			<p>Connectez-vous pour poster un commentaire.</p>
+		{% endif %}
+	</fieldset>	
 
 	<fieldset>
 		<legend>COMMENTAIRES</legend>
@@ -55,32 +55,37 @@
 
 			<!-- Swig ne semble pas prendre en compte le OR et le AND donc scission en plusieurs IF. -->
 			{% if user.typeUser == 2 %}
-			{% if user._id.toString() == comment.idAuthor %}
-			<form method="post" action="edit">
-				<input type="submit" value="EditComment" name="edit"/>
-				<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
-			</form>
-			<form method="post" action="delete">
-				<input type="submit" value="DeleteComment" name="delete"/>
-				<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentDelete" />
-			</form>
-			{% endif %}
+				{% if user._id.toString() == comment.idAuthor %}
+					<form method="post" action="edit">
+						<input type="submit" value="EditComment" name="edit"/>
+						<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
+					</form>
+					<form method="post" action="delete">
+						<input type="submit" value="DeleteComment" name="delete"/>
+						<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentDelete" />
+					</form>
+				{% endif %}
 			{% endif %}
 			{% if user.typeUser == 1 %} 
-			<form method="post" action="edit">
-				<input type="submit" value="EditComment" name="edit"/>
-				<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
-			</form>
-			<form method="post" action="delete">
-				<input type="submit" value="DeleteComment" name="delete"/>
-				<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentDelete" />
-			</form>
+				<form method="post" action="edit">
+					<input type="submit" value="EditComment" name="edit"/>
+					<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
+				</form>
+				<form method="post" action="delete">
+					<input type="submit" value="DeleteComment" name="delete"/>
+					<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentDelete" />
+					<input type="hidden" value="{{ article._id.toString() }}" name="idArticle" />
+				</form>
 			{% endif %}
 
 			<p>
 				<li>
 					<a href="mailto:{{ comment.authorMail }}">
-					{{ comment.authorPseudo }}</a> le {{ comment.date.toString() }}.
+					{{ comment.authorPseudo }}</a> le {{ article.date.getDate() + '/' + 
+					                                  (article.date.getMonth()+1) + '/' +
+					                                   article.date.getFullYear() + ' ' +
+					                                   article.date.toLocaleTimeString()}}
+					                                    par {{ article.author }}.
 				</li>
 				<li>
 				{{ comment.text }}
