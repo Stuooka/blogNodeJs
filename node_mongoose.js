@@ -7,8 +7,10 @@ var express = require('express');
 var session = require('express-session');
 var app = express();
 var bodyParser = require('body-parser');
+var path = require('path');
 app.use(bodyParser());
 app.use(session({ cookie: {maxAge: 36000000, httpOnly: false}, secret: 'secret' })); 
+app.use(express.static(__dirname+'/public'));
 
 //Déclaration variable de session
 var sess;
@@ -51,14 +53,13 @@ var articleModel = mongoose.model('articles', articleSchema);
 // Création du schéma pour les commentaires
 var commentairesSchema = new mongoose.Schema({
     id: Number,
-    authorPseudo: String,
-    authorMail: String,
     date: {
         type: Date,
         default: Date.now
     },
     text: String,
-    idArticle: String
+    idArticle: String,
+    idAuthor: String
 });
 // Création du Model pour les commentaires
 var commentairesModel = mongoose.model('commentaires', commentairesSchema);
@@ -82,12 +83,12 @@ app.get('/', function(req, res) {
     //Récupération de tout les articles
     var articles;
     var query = articleModel.find();
-console.log(sess.typeUser);
     query.exec(function(err, articles) {
         if (err) { throw err; }
 
         res.render('contentAccueil', {
-        	articles: articles, typeUser: sess.typeUser
+        	articles: articles,
+            user: sess.user
 		});
     });    
 });
@@ -98,22 +99,40 @@ app.get('/:page', function(req, res) {
     var articles;
     var query = articleModel.find();
     sess = req.session;
-console.log(sess.typeUser);
     query.exec(function(err, articles) {
         if (err) { throw err; }		
 			
 		switch(req.params.page) {
 
 			case 'accueil':
-				res.render('contentAccueil', { articles: articles });
+				res.render('contentAccueil', {
+                    articles: articles,
+                    user: sess.user
+                });
 			break;
 
             case 'admin':
-                res.render('contentAdmin');
+                res.render('contentAdmin',{
+                    user: sess.user
+                });
+            break;
+
+            case 'disconnect':
+                req.session.destroy(function(err){
+                    if(err){
+                        console.log(err);
+                    }
+                    else
+                    {
+                        res.redirect('/');
+                    }
+                });
             break;
 
             case 'compte':
-                res.render('contentAccount');
+                res.render('contentAccount',{
+                    user: sess.user
+                });
             break;
 
             case 'article':
@@ -134,14 +153,18 @@ console.log(sess.typeUser);
                         //spécifique aux articles
                         res.render('contentArticle', { 
                             article: article[0],
-                            commentaires: comms 
+                            commentaires: comms,
+                            user: sess.user
                         });
                     });
                     break;                       
                 }
 
 			default:
-				res.render('contentAccueil', { articles: articles });
+				res.render('contentAccueil', { 
+                    articles: articles,
+                    user: sess.user
+                });
                 break;
 		}
     });    
@@ -162,22 +185,23 @@ app.post('/:page', function(req, res) {
                     if(err) { throw err; }
                     console.log('Compte créé avec succès !');
                     //rechargement de la page
-                    res.redirect('/compte');
+                    res.redirect('/accueil');
                 });
             }
             if (req.body.form == 'connection') {
                 //Récupération de tout les comptes
                 var comptes;
-                var query = compteModel.find("this.pseudo == req.body.pseudoConnect");
+                var query = compteModel.find();
+                query.where('pseudo', req.body.pseudoConnect);
 
                 query.exec(function(err, comptes) {
 					if (err) { throw err; }
 					if (comptes[0].password == req.body.passwordConnect){
-						sess.username = comptes[0].pseudo;
-						sess.typeUser = comptes[0].typeUser;
+                        sess.user = comptes[0];
+						//sess.username = comptes[0].pseudo;
+						//sess.typeUser = comptes[0].typeUser;
 						req.session = sess;
 						req.session.save(function(err) {
-							console.log(sess.typeUser);
 							res.redirect('/accueil');
 						  // session saved 
 						});
@@ -193,17 +217,16 @@ app.post('/:page', function(req, res) {
         case 'article' :
             //Création d'un nouveau commentaire
             var monCommentaire = new commentairesModel();
-            monCommentaire.authorPseudo = req.body.authorPseudo;
-            monCommentaire.authorMail = req.body.authorMail;
             monCommentaire.text = req.body.messageCommentaire;
+            monCommentaire.idAuthor = req.body.authorId;
             monCommentaire.idArticle = req.body.idArticle;
 
             monCommentaire.save(function(err){
                 if(err) { throw err; }
-            console.log('Commentaire ajouté avec succès !');
-            //rechargement de la page
-            res.redirect('/article?id='+req.body.idArticle);
-        });
+                console.log('Commentaire ajouté avec succès !');
+                //rechargement de la page
+                res.redirect('/article?id='+req.body.idArticle);
+            });
         break;
 
         case 'admin':
@@ -213,13 +236,42 @@ app.post('/:page', function(req, res) {
             monArticle.author = req.body.author;
             monArticle.excerpt = req.body.content.substr(0, 6) + "...";
             monArticle.text = req.body.content;
-
             monArticle.save(function(err) {
                 if (err) { throw err; }
                 console.log('Article ajouté avec succès !');
                 //rechargement de la page
                 res.redirect('/admin');
             });
+        break;
+
+        case 'edit':
+            if(req.body.edit == "EditArticle"){
+
+            }
+            if(req.body.edit == "EditComment"){
+
+            }
+        break;
+
+        case 'delete':
+            if(req.body.delete == "DeleteArticle"){
+                var query = articleModel.find();
+                query.where('_id', req.body.idArticleDelete);
+                query.remove(function(err, comptes) {
+                    if(err) { throw err; }
+                    console.log('Article correctement supprimé !');
+                    redirect('/accueil');
+                });
+            }
+            if(req.body.delete == "DeleteComment"){
+                var query = commentairesModel.find();
+                query.where('_id', req.body.idCommentDelete);
+                query.remove(function(err, comptes) {
+                    if(err) { throw err; }
+                    console.log('Commentaire correctement supprimé !');
+                    res.redirect('/article?id='+req.body.idArticle);
+                });
+            }
         break;
 
         default:

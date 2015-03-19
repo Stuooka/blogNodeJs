@@ -3,9 +3,20 @@
 <head>
   	<meta charset="utf-8">
   	<title>{% block title %}My Site{% endblock %}</title>
-	<link rel="stylesheet" href="css.css" />
+	<link type="text/css" rel="stylesheet" href="css.css" />
 </head>
 <body>
+	<table border="0">
+		<tr>
+			{% if user.typeUser == 1 %}
+			<td><p><a href="/admin">Panel d'Administration</a></p></td>
+			{% endif %}
+			<td><p><a href="/compte">Connexion / Inscription</a></p></td>
+			{% if user.typeUser == 1 || user.typeUser == 2 %}
+			<td><p><a href="/disconnect">User - Deconnexion</a></p></td>
+			{% endif %}
+		</tr>
+	</table>
 	{% block content %}{% endblock %}
 	<div id="footer">
 	 	<p>Copyright © Adrien Expert - Johann Ponset - Mathieu Lannes | 2015</p> 

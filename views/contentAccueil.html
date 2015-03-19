@@ -2,23 +2,15 @@
 
 {% block content %}
 
-
-
-<table border="0">
-	<tr>
-		<td><p><a href="/admin">Panel d'Administration</a></p></td>
-		<td><p><a href="/compte">Connexion / Inscription</a></p></td>
-		{% if typeUser == 1%}
-		<td><p><a href="/disconnect">User - Deconnexion</a></p></td>
-		{% endif %}
-	</tr>
-</table>
-	<h1>Bienvenue sur le blog du TP de NodeJs</h1>
+<h1>Bienvenue sur le blog du TP de NodeJs</h1>
 	{% for article in articles %}
 		<div class="article">
 			<p>
 				<h1>{{ article.title }}</h1>
-				<h5>{{ article.date.toString() }} par {{ article.author }}</h5>
+				<h5>{{ article.date.getDate() + '/' + 
+                                  (article.date.getMonth()+1) + '/' +
+                                   article.date.getFullYear() + ' ' +
+                                   article.date.toLocaleTimeString()}} par {{ article.author }}</h5>
 
 				{{ article.excerpt }} <br />
 				<a href="/article?id={{ article._id.toString() }}">Lire la suite</a>
