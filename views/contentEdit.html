@@ -4,7 +4,7 @@
 <p><a href="/">Go back</a></p>
 <h2>Edition</h2>
 
-{% if typeEdit == article %}
+{% if typeEdit == "article" && user.typeUser == 1 %}
 	<fieldset>
 		<legend>Editer un article</legend>
 		<table border="0">
@@ -26,7 +26,7 @@
 		<p id="err">{{ errMessage }}</p>	
 	</fieldset>
 
-{% elseif typeEdit == comment %}
+{% elseif typeEdit == "comment" %}
 
 	<fieldset>
 		<legend>Editer un commentaire</legend>
