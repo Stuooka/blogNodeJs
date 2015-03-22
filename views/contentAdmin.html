@@ -12,17 +12,15 @@
 	    	    <td><input type="text" name="title" /></td>
 	    	</tr>
 	    	<tr>
-	    	    <td>Author: <!-- default : $_SESSION['pseudo'] ?? --></td>
-	    	    <td><input type="text" name="author" /></td>
-	    	</tr>
-	    	<tr>
 	    	    <td>Contenu:</td>
 	    	    <td><textarea name="content" cols="80" rows="20"></textarea></td>
 	    	</tr>
 	    	<tr>
 	    	   	<td><button type="publish">Publier</button></td>
         	</tr>
+        	<input type="hidden" name="author" value="{{ user.pseudo }}" />
     	</form>
 	</table>
+	<p id="err">{{ errMessage }}</p>	
 </fieldset>
 {% endblock %}

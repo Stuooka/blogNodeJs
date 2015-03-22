@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+
+{% block content %}
+<p><a href="/">Go back</a></p>
+<h2>Edition</h2>
+
+{% if typeEdit == article %}
+	<fieldset>
+		<legend>Editer un article</legend>
+		<table border="0">
+			<form action="edit" method="post">
+				<input type="hidden" name="idEditArticle" value="{{ id }}" />
+				<tr>
+		    	    <td>Title:</td>
+		    	    <td><input type="text" name="title" /></td>
+		    	</tr>
+		    	<tr>
+		    	    <td>Contenu:</td>
+		    	    <td><textarea name="content" cols="80" rows="20"></textarea></td>
+		    	</tr>
+		    	<tr>
+		    	   	<td><button type="publish" name="edit" value="editArticle">Publier</button></td>
+	        	</tr>
+	    	</form>
+		</table>
+		<p id="err">{{ errMessage }}</p>	
+	</fieldset>
+
+{% elseif typeEdit == comment %}
+
+	<fieldset>
+		<legend>Editer un commentaire</legend>
+		{% if user.typeUser != 0 %}
+			<table border="0">
+				<form method="post" action="edit">
+				<input type="hidden" name="idEditComment" value="{{ id }}" />
+					<tr>
+						<td><label>Message :</label></td>
+						<td><textarea name="messageCommentaire" cols="80" rows="20" placeholder="Votre commentaire ici..."></textarea></td>
+					</tr>
+					<tr>
+						<td><button type="publish" name="edit" value="editComment">Publier</button></td>
+					</tr>
+				</form>
+			</table>
+		{% else %}
+			<p>Connectez-vous pour éditer un commentaire.</p>
+		{% endif %}
+	</fieldset>
+{% endif % }
+
+{% endblock %}

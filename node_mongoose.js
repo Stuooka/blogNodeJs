@@ -151,7 +151,7 @@ app.get('/:page', function(req, res) {
                         commentaires=comms;
                         //Envois de l'article et de ses commentaires à la page
                         //spécifique aux articles
-                        res.render('contentArticle', { 
+                        res.render('contentArticle', {
                             article: article[0],
                             commentaires: comms,
                             user: sess.user
@@ -159,6 +159,20 @@ app.get('/:page', function(req, res) {
                     });
                     break;                       
                 }
+
+                case 'edit':
+                    var type="";
+                    if(req.query.type=='article'){
+                        type='article';
+                    }else if(req.query.type=='comment'){
+                        type='comment';
+                    }
+                    res.render('contentEdit', {
+                        id: req.query.id,
+                        user: sess.user,
+                        typeEdit: type
+                    });
+                break;
 
 			default:
 				res.render('contentAccueil', { 
@@ -174,10 +188,11 @@ app.get('/:page', function(req, res) {
 app.post('/:page', function(req, res) {
     switch(req.params.page){
         case 'compte' :
+
             if (req.body.form == 'register'){
-                //Si les infos sont rentrées
-                if(req.body.pseudo != "" || 
-                    req.body.mail != "" ||
+                //Si le pseudo, le mot de passe et le mail sont rentrées
+                if(req.body.pseudo != "" && 
+                    req.body.mail != "" &&
                     req.body.password != ""){
                     //Création d'un nouveau compte
                     var monCompte = new compteModel();
@@ -200,7 +215,8 @@ app.post('/:page', function(req, res) {
             }
 
             if (req.body.form == 'connection') {
-                if(req.body.pseudoConnect != "" ||
+                //Si le pseudo et le mot de passe sont rentrées
+                if(req.body.pseudoConnect != "" &&
                     req.body.passwordConnect != ""){
                     //Récupération de tout les comptes
                     var comptes;
@@ -237,6 +253,7 @@ app.post('/:page', function(req, res) {
         break;
        
         case 'article' :
+            //Si le commentaire est écrit
             if(req.body.messageCommentaire != ""){
                 //Création d'un nouveau commentaire
                 var monCommentaire = new commentairesModel();
@@ -250,30 +267,75 @@ app.post('/:page', function(req, res) {
                     //rechargement de la page
                     res.redirect('/article?id='+req.body.idArticle);
                 });
-            }  
+            } 
         break;
 
         case 'admin':
-            //Création d'un nouvel article
-            var monArticle = new articleModel();
-            monArticle.title = req.body.title;
-            monArticle.author = req.body.author;
-            monArticle.excerpt = req.body.content.substr(0, 6) + "...";
-            monArticle.text = req.body.content;
-            monArticle.save(function(err) {
-                if (err) { throw err; }
-                console.log('Article ajouté avec succès !');
-                //rechargement de la page
-                res.redirect('/admin');
-            });
+            if(req.body.content != "" && req.body.title != ""){
+                //Création d'un nouvel article
+                var monArticle = new articleModel();
+                monArticle.title = req.body.title;
+                monArticle.author = req.body.author;
+                monArticle.excerpt = req.body.content.substr(0, 6) + "...";
+                monArticle.text = req.body.content;
+                monArticle.save(function(err) {
+                    if (err) { throw err; }
+                    console.log('Article ajouté avec succès !');
+                    //rechargement de la page
+                    res.redirect('/admin');
+                });
+            }else{
+                    var errMessage = "Veuillez rentrer toutes les informations";
+                    res.render('contentAdmin', { 
+                        errMessage: errMessage
+                    });
+                }   
         break;
 
         case 'edit':
-            if(req.body.edit == "EditArticle"){
+            switch(req.body.edit){
+                case 'editCommentPage':
+                    res.redirect('/edit?type=comment&id='+req.body.idCommentEdit);
+                break;
 
-            }
-            if(req.body.edit == "EditComment"){
+                case 'editArticlePage':
+                    res.redirect('/edit?type=article&id='+req.body.idArticleEdit);
+                break;
 
+                case 'editComment':
+                    if(req.body.messageCommentaire != ""){
+                        commentairesModel.update(
+                            {_id:req.body.idEditComment},
+                            {
+                                text:req.body.messageCommentaire
+                            },
+                            function(err) {
+                                if(err) { throw err; }
+                                console.log('Commentaire correctement édité !');
+                                res.redirect('/');
+                            });                        
+                    }
+                break;
+
+                case 'editArticle':
+                    if(req.body.title != "" && req.body.content != ""){
+                        articleModel.update(
+                            {_id:req.body.idEditArticle},
+                            {
+                                title:req.body.title,
+                                excerpt:req.body.content.substr(0, 6) + "...",
+                                text:req.body.content
+                            },
+                            function(err) {
+                                if(err) { throw err; }
+                                console.log('Article correctement édité !');
+                                res.redirect('/');
+                            });                        
+                    }
+                break;
+
+                default:
+                break;
             }
         break;
 
@@ -282,7 +344,7 @@ app.post('/:page', function(req, res) {
                 var query = articleModel.find();
                 query.where('_id', req.body.idArticleDelete);
                 res.redirect('/accueil');
-                query.remove(function(err, comptes) {
+                query.remove(function(err) {
                     if(err) { throw err; }
                     console.log('Article correctement supprimé !');
                 });
@@ -290,7 +352,7 @@ app.post('/:page', function(req, res) {
             if(req.body.delete == "DeleteComment"){
                 var query = commentairesModel.find();
                 query.where('_id', req.body.idCommentDelete);
-                query.remove(function(err, comptes) {
+                query.remove(function(err) {
                     if(err) { throw err; }
                     console.log('Commentaire correctement supprimé !');
                     res.redirect('/article?id='+req.body.idArticle);
