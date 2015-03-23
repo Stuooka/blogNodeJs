@@ -20,12 +20,18 @@ html{
 	font-family: "Lucida Sans", "Lucida Sans Unicode";
 }
 
-form .edit{
-	background-image: url(../images/edit.png);
+.edit{
+	background-image: url("/images/edit.png");
+        color: transparent;
+        height: 35px;
+        width: 35px;
 }
 
-form .delete{
-	background-image: url(../images/delete.png);
+.delete{
+	background-image: url("/images/delete.png");
+        color: transparent;
+        height: 35px;
+        width: 35px;
 }
 
 
@@ -36,6 +42,7 @@ body{
 	max-width: 800 px;
 	min-width: inherit;
 	height: 100%;
+        outline: 0;
 }
 
 

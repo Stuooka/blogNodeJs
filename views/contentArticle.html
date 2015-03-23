@@ -6,14 +6,17 @@
 		<legend>ARTICLE</legend>
 
 		{% if user.typeUser == 1 %}
+                <table border="0"><tr><td>
 			<form method="post" action="edit">
-				<input type="submit" value="editArticlePage" name="edit"/>
+				<input class="edit" type="submit" value="editArticlePage" name="edit"/>
 				<input type="hidden" value="{{ article._id.toString() }}" name="idArticleEdit" />
 			</form>
+                            </td><td>
 			<form method="post" action="delete">
-				<input type="submit" value="DeleteArticle" name="delete"/>
+				<input class="delete" type="submit" value="DeleteArticle" name="delete"/>
 				<input type="hidden" value="{{ article._id.toString() }}" name="idArticleDelete" />
 			</form>
+                </td></tr></table>
 		{% endif %}
 
 		<h1>{{ article.title }}</h1>
@@ -31,6 +34,8 @@
 				<form method="post" action="article">					
 					<input type="hidden" name="authorId" 
 						value="{{ user._id.toString() }}" />
+					<input type="hidden" name="authorPseudo" 
+						value="{{ user.pseudo }}" />
 					<input type="hidden" name="idArticle"
 						value="{{ article._id.toString() }}" />
 					<tr>
@@ -55,41 +60,55 @@
 			<!-- Swig ne semble pas prendre en compte le OR et le AND donc scission en plusieurs IF. -->
 			{% if user.typeUser == 2 %}
 				{% if user._id.toString() == comment.idAuthor %}
-					<form method="post" action="edit">
-						<input type="submit" value="editCommentPage" name="edit"/>
-						<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
-					</form>
-					<form method="post" action="delete">
-						<input type="submit" value="DeleteComment" name="delete"/>
-						<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentDelete" />
-					</form>
+                <table border="0">
+                	<tr>
+                		<td>
+							<form method="post" action="edit">
+								<input class="edit" type="submit" value="editCommentPage" name="edit"/>
+								<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
+							</form>
+						</td>
+						<td>                                                
+							<form method="post" action="delete">
+								<input class="delete" type="submit" value="DeleteComment" name="delete"/>
+								<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentDelete" />
+							</form>
+                        </td>
+                    </tr>
+                </table>
 				{% endif %}
 			{% endif %}
 			{% if user.typeUser == 1 %} 
-				<form method="post" action="edit">
-					<input type="submit" value="editCommentPage" name="edit"/>
-					<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
-				</form>
-				<form method="post" action="delete">
-					<input type="submit" value="DeleteComment" name="delete"/>
-					<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentDelete" />
-					<input type="hidden" value="{{ article._id.toString() }}" name="idArticle" />
-				</form>
+            <table border="0">
+            	<tr>
+            		<td>
+						<form method="post" action="edit">
+							<input class="edit" type="submit" value="editCommentPage" name="edit"/>
+							<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentEdit" />
+						</form>
+                    </td>
+                    <td>
+						<form method="post" action="delete">
+							<input class="delete" type="submit" value="DeleteComment" name="delete"/>
+							<input type="hidden" value="{{ comment._id.toString() }}" name="idCommentDelete" />
+							<input type="hidden" value="{{ article._id.toString() }}" name="idArticle" />
+						</form>
+                    </td>
+                </tr>
+            </table>
 			{% endif %}
 
-			<p>
-				<li>
-					<a href="mailto:{{ comment.authorMail }}">
-					{{ comment.authorPseudo }}</a> le {{ article.date.getDate() + '/' + 
-					                                  (article.date.getMonth()+1) + '/' +
-					                                   article.date.getFullYear() + ' ' +
-					                                   article.date.toLocaleTimeString()}}
-					                                    par {{ article.author }}.
-				</li>
-				<li>
+			<li>
+				Le {{ comment.date.getDate() +
+				 '/' + (comment.date.getMonth()+1) + '/' +
+                   comment.date.getFullYear() + ' ' +
+                   	comment.date.toLocaleTimeString()}}
+                	 par {{ comment.authorPseudo }}.
+			</li>
+			<li>
 				{{ comment.text }}
-				</li>
-			</p>
+			</li>
+			
 			{% endfor %}
 		</ul>
 	</fieldset>

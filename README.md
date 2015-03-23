@@ -1,4 +1,8 @@
 # blogNodeJs
 Ingesup - B3 : Dossier pour le TP noté NodeJs
 
-TEST COMMIT / PUSH
+sujet : BLOG
+
+Johann PONSET
+Mathieu LANNES
+Adrien EXPERT

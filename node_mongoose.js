@@ -58,6 +58,7 @@ var commentairesSchema = new mongoose.Schema({
         default: Date.now
     },
     text: String,
+    authorPseudo: String,
     idArticle: String,
     idAuthor: String
 });
@@ -260,6 +261,7 @@ app.post('/:page', function(req, res) {
                 monCommentaire.text = req.body.messageCommentaire;
                 monCommentaire.idAuthor = req.body.authorId;
                 monCommentaire.idArticle = req.body.idArticle;
+                monCommentaire.authorPseudo = req.body.authorPseudo;
 
                 monCommentaire.save(function(err){
                     if(err) { throw err; }
